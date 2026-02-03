@@ -1,0 +1,40 @@
+-- Simple database creation script
+-- Run this manually in MySQL: mysql -u root -p12345678 < create_database.sql
+
+CREATE DATABASE IF NOT EXISTS lpg_system;
+USE lpg_system;
+
+-- Create users table
+CREATE TABLE IF NOT EXISTS users (
+    username VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(100) NOT NULL,
+    role VARCHAR(20) NOT NULL
+);
+
+-- Create applications table
+CREATE TABLE IF NOT EXISTS applications (
+    app_id INT AUTO_INCREMENT PRIMARY KEY,
+    applicant_username VARCHAR(50) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    mobile_no VARCHAR(15) NOT NULL,
+    address TEXT NOT NULL,
+    num_connections INT NOT NULL,
+    status VARCHAR(20) DEFAULT 'PENDING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (applicant_username) REFERENCES users(username)
+);
+
+-- Insert default users
+INSERT IGNORE INTO users (username, password, role) VALUES 
+('admin', 'admin123', 'ADMIN'),
+('user1', 'user123', 'USER');
+
+-- Insert sample application
+INSERT IGNORE INTO applications (applicant_username, name, mobile_no, address, num_connections, status) 
+VALUES ('user1', 'Priya Sharma', '9876543210', '123, Main St.', 2, 'PENDING');
+
+-- Verify data
+SELECT 'Users table:' as info;
+SELECT * FROM users;
+SELECT 'Applications table:' as info;
+SELECT * FROM applications;
